@@ -71,6 +71,7 @@ class CaptureMode(Flag):
     OVERLAY = auto()
     POST_PERMALINKS = auto()
     JOB_POSTING = auto()
+    WHEEL_LOAD = auto()
 
 
 @dataclass(frozen=True)
@@ -436,6 +437,32 @@ class SectionCapture:
                 except Exception as e:
                     logger.debug("Show more click failed: %s", e)
                     break
+
+        # Some lists (the skills details page, issue #590) have no "Show more"
+        # pager and ignore window.scrollTo: they append the next batch only on a
+        # real wheel event over the page. Wheel at the viewport centre, as the
+        # feed does, until main's text stops growing. Text length, not labels,
+        # so it works in any locale.
+        if CaptureMode.WHEEL_LOAD in plan.mode:
+            page = self._session.page
+            viewport = page.viewport_size or {"width": 1280, "height": 720}
+            await page.mouse.move(viewport["width"] // 2, viewport["height"] // 2)
+            text_length = (
+                "(() => { const wheelLoadMain = document.querySelector('main');"
+                " return (wheelLoadMain?.innerText || '').length; })()"
+            )
+            last = await page.evaluate(text_length)
+            stale = 0
+            for _ in range(40):
+                await page.mouse.wheel(0, 2000)
+                await self._session.delay(1.5)
+                length = await page.evaluate(text_length)
+                if length > last:
+                    last, stale = length, 0
+                else:
+                    stale += 1
+                    if stale >= 3:
+                        break
 
         # A posting renders its header, apply controls and company boilerplate
         # before the description panel, so a page read once `<main>` exists
