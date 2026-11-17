@@ -72,6 +72,7 @@ class CaptureMode(Flag):
     POST_PERMALINKS = auto()
     JOB_POSTING = auto()
     WHEEL_LOAD = auto()
+    SETTLE = auto()
 
 
 @dataclass(frozen=True)
@@ -99,6 +100,88 @@ def capture_plan_for_url(url: str, max_scrolls: int | None = None) -> CapturePla
     if "/details/" in path:
         mode |= CaptureMode.DETAILS
     return CapturePlan(mode=mode, max_scrolls=max_scrolls)
+
+
+# The profile main page loads in stages. Its first paint holds the top card and
+# the sidebar only. About, Services, Activity and the other cards arrive later
+# through React Server Component fetches (/flagship-web/rsc-action/actions/...),
+# which start about 0.7 s after the load event and finish 2-3 s after it. A
+# capture right after navigation returned the top card only (measured on a
+# profile in 11/2026: 1,505 characters at first paint, 6,170 when settled, with
+# the text unchanged for 1.7 s before the cards arrived). So text stability
+# alone is not a safe signal. SETTLE waits for those fetches instead.
+_LAZY_COMPONENT_PATH = "/flagship-web/rsc-action/actions/"
+_SETTLE_POLL = 0.5
+# Text unchanged and no component fetch in flight for this long: settled.
+_SETTLE_QUIET = 1.0
+# How long to wait for the first component fetch before trusting the text alone.
+_SETTLE_FIRST_FETCH = 4.0
+# Without a tracker (main page already loaded before the capture started), the
+# text alone must hold still longer than the 1.7 s gap measured above.
+_SETTLE_FALLBACK_QUIET = 3.0
+# Hard cap. The capture then reads what rendered and logs a warning.
+_SETTLE_CAP = 15.0
+_SETTLE_TEXT_LENGTH = (
+    "(() => { const settleMain = document.querySelector('main');"
+    " return (settleMain?.innerText || '').length; })()"
+)
+
+
+def _is_lazy_component_request(url: str) -> bool:
+    """True for the server-component fetches that fill in a profile page."""
+    return _LAZY_COMPONENT_PATH in urlparse(url).path
+
+
+class _HydrationTracker:
+    """Count lazy component fetches started and still in flight on a page.
+
+    Installed before navigation, like the permalink listener, because the
+    first fetches start right after the load event.
+    """
+
+    def __init__(self, page: Any):
+        self._page = page
+        # Keyed by identity, holding the request so its id cannot be reused
+        # while it is tracked. Playwright does not promise hashable requests.
+        self._in_flight: dict[int, Any] = {}
+        self.started = 0
+
+    @property
+    def pending(self) -> int:
+        return len(self._in_flight)
+
+    def install(self) -> None:
+        self._page.on("request", self._on_request)
+        self._page.on("requestfinished", self._on_done)
+        self._page.on("requestfailed", self._on_done)
+
+    def remove(self) -> None:
+        for event, handler in (
+            ("request", self._on_request),
+            ("requestfinished", self._on_done),
+            ("requestfailed", self._on_done),
+        ):
+            try:
+                self._page.remove_listener(event, handler)
+            except Exception:
+                logger.debug("Failed to remove hydration listener", exc_info=True)
+
+    def reset(self) -> None:
+        """Forget an attempt that will be retried after a fresh navigation."""
+        self._in_flight.clear()
+        self.started = 0
+
+    def _on_request(self, request: Any) -> None:
+        try:
+            url = request.url
+        except Exception:
+            return
+        if _is_lazy_component_request(url):
+            self._in_flight[id(request)] = request
+            self.started += 1
+
+    def _on_done(self, request: Any) -> None:
+        self._in_flight.pop(id(request), None)
 
 
 class _PermalinkResponseListener:
@@ -256,9 +339,15 @@ class SectionCapture:
         if CaptureMode.POST_PERMALINKS in plan.mode:
             listener = _PermalinkResponseListener(self._session.page)
             listener.install()
+        tracker: _HydrationTracker | None = None
+        if CaptureMode.SETTLE in plan.mode:
+            tracker = _HydrationTracker(self._session.page)
+            tracker.install()
         try:
             try:
-                result = await self._capture_once(url, section_name, plan, listener)
+                result = await self._capture_once(
+                    url, section_name, plan, listener, tracker
+                )
                 if result.text != RATE_LIMITED_SECTION_TEXT:
                     return result
 
@@ -284,7 +373,11 @@ class SectionCapture:
                 await self._session.delay(RATE_LIMIT_RETRY_DELAY)
                 if listener is not None:
                     listener.install()
-                return await self._capture_once(url, section_name, plan, listener)
+                if tracker is not None:
+                    tracker.reset()
+                return await self._capture_once(
+                    url, section_name, plan, listener, tracker
+                )
 
             except LinkedInOperationError:
                 raise
@@ -324,6 +417,8 @@ class SectionCapture:
                 )
 
         finally:
+            if tracker is not None:
+                tracker.remove()
             if listener is not None:
                 listener.remove()
                 await listener.drain()
@@ -334,14 +429,50 @@ class SectionCapture:
         section_name: str,
         plan: CapturePlan,
         permalink_capture: _PermalinkResponseListener | None = None,
+        hydration: _HydrationTracker | None = None,
     ) -> ExtractedSection:
         """Single attempt to navigate and capture a section."""
         await self._navigator._navigate_to_page(url)
         if CaptureMode.OVERLAY in plan.mode:
             return await self._extract_overlay_content(url, section_name)
         return await self._extract_loaded_section(
-            url, section_name, plan, permalink_capture=permalink_capture
+            url,
+            section_name,
+            plan,
+            permalink_capture=permalink_capture,
+            hydration=hydration,
         )
+
+    async def _settle(self, url: str, hydration: _HydrationTracker | None) -> bool:
+        """Wait until a staged page has loaded its lazy cards. See _SETTLE_* above.
+
+        Counts time in poll steps through the session delay, so the wait is the
+        same under a fake clock. Returns False when the cap was reached.
+        """
+        page = self._session.page
+        quiet_needed = (
+            _SETTLE_QUIET if hydration is not None else _SETTLE_FALLBACK_QUIET
+        )
+        last = await page.evaluate(_SETTLE_TEXT_LENGTH)
+        elapsed = quiet = 0.0
+        while elapsed < _SETTLE_CAP:
+            await self._session.delay(_SETTLE_POLL)
+            elapsed += _SETTLE_POLL
+            length = await page.evaluate(_SETTLE_TEXT_LENGTH)
+            busy = hydration is not None and hydration.pending > 0
+            waiting_first = (
+                hydration is not None
+                and hydration.started == 0
+                and elapsed < _SETTLE_FIRST_FETCH
+            )
+            if length != last or busy or waiting_first:
+                last, quiet = length, 0.0
+            else:
+                quiet += _SETTLE_POLL
+                if quiet >= quiet_needed:
+                    return True
+        logger.warning("Page %s did not settle within %.0fs", url, _SETTLE_CAP)
+        return False
 
     async def _extract_loaded_section(
         self,
@@ -350,6 +481,7 @@ class SectionCapture:
         plan: CapturePlan,
         *,
         permalink_capture: _PermalinkResponseListener | None = None,
+        hydration: _HydrationTracker | None = None,
     ) -> ExtractedSection:
         """Run an explicit post-navigation extraction plan on the current page."""
         await self._session.check_rate_limit()
@@ -360,6 +492,9 @@ class SectionCapture:
             logger.debug("No <main> element found on %s", url)
 
         await self._session.dismiss_modal()
+
+        if CaptureMode.SETTLE in plan.mode:
+            await self._settle(url, hydration)
 
         if CaptureMode.ACTIVITY in plan.mode:
             try:

@@ -302,6 +302,9 @@ async def _person_sections_scenario() -> dict[str, Any]:
     page.script("evaluate:root_content", *roots)
     # skills wheel-loads (issue #590): a list that never grows stops after 3 tries
     page.script("evaluate:wheel_load_text_length", 100, 100, 100, 100)
+    # the main page settles: no lazy component fetch here, so it waits for the
+    # first one until 4 s, then needs one quiet second (1 read + 9 polls)
+    page.script("evaluate:settle_text_length", *([1500] * 10))
     _script_profile_target(page)
     page.declare_locator("main button", "show_more")
     page.declare_derived(
@@ -984,6 +987,9 @@ async def _get_my_profile_scenario() -> dict[str, Any]:
     page = _page(recorder)
     page.goto_landings.append("https://www.linkedin.com/in/ada-lovelace/")
     page.script("evaluate:root_content", _root("Own profile"))
+    # main page already loaded by the /in/me/ redirect: no tracker, the text
+    # alone must hold still for 3 s (1 read + 6 polls)
+    page.script("evaluate:settle_text_length", *([1500] * 7))
     _script_profile_target(page, profile_urn="ACoAA-self")
     extractor = _extractor(page)
     async with boundaries(recorder, clock):
@@ -1002,6 +1008,8 @@ async def _connect_scenario() -> dict[str, Any]:
     clock = FakeClock(recorder)
     page = _page(recorder)
     page.script("evaluate:root_content", _root("Own profile"))
+    # the profile main page settles first (1 read + 9 polls, see person sections)
+    page.script("evaluate:settle_text_length", *([1500] * 10))
     _script_profile_target(page, "unavailable")
     page.script(
         "evaluate:connection_action_signals",

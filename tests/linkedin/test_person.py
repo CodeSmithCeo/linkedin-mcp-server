@@ -307,7 +307,7 @@ class TestReadPersonUrls:
             capture_call.kwargs["plan"].mode
             for capture_call in mock_extract.call_args_list
         ] == [
-            CaptureMode.STANDARD,
+            CaptureMode.SETTLE,  # main page waits for its lazy cards
             *([CaptureMode.DETAILS] * 7),
             CaptureMode.DETAILS | CaptureMode.WHEEL_LOAD,  # skills, issue #590
             CaptureMode.DETAILS,
@@ -484,7 +484,7 @@ class TestReadPersonUrls:
         assert [
             capture_call.kwargs["plan"].mode
             for capture_call in mock_extract.call_args_list
-        ] == [CaptureMode.STANDARD, CaptureMode.DETAILS]
+        ] == [CaptureMode.SETTLE, CaptureMode.DETAILS]
         for capture_call in mock_extract.call_args_list:
             assert capture_call.kwargs["plan"].max_scrolls == 15
 
@@ -536,7 +536,7 @@ class TestReadPersonUrls:
             for url, _section_name, _plan in calls
         ] == [suffix for suffix, _is_overlay in table.values()]
         assert [plan.mode for _url, _section_name, plan in calls] == [
-            CaptureMode.STANDARD,
+            CaptureMode.SETTLE,
             CaptureMode.OVERLAY,
             CaptureMode.DETAILS,
             CaptureMode.ACTIVITY,
@@ -882,6 +882,12 @@ class TestReadPersonSectionOutcomes:
 
 OVERLAY_ROOTS: tuple[str, ...] = ("dialog[open]", ".artdeco-modal__content")
 MAIN_ROOT: tuple[str, ...] = ("main",)
+# The main page's settle wait under the fake browser: no lazy component fetch
+# ever starts, so it polls until _SETTLE_FIRST_FETCH (8 polls, the 8th already
+# quiet), then one more quiet poll: 4.5 s in 0.5 s steps.
+SETTLE_WAIT: list[tuple[str, Any]] = [("delay", 0.5)] * 9
+# Main page already loaded (get_my_profile): no tracker, three quiet seconds.
+SETTLE_WAIT_LOADED: list[tuple[str, Any]] = [("delay", 0.5)] * 6
 NOISE_ONLY = (
     "More profiles for you\n\n"
     "You've approached your profile search limit\n\n"
@@ -1024,6 +1030,7 @@ class TestMissingContactOverlay:
 
         assert events == [
             ("goto", f"{base}/"),
+            *SETTLE_WAIT,
             ("delay", 2.0),
             ("goto", overlay),
             ("delay", 2.0),
@@ -1058,6 +1065,7 @@ class TestMissingContactOverlay:
 
         assert events == [
             ("goto", f"{base}/"),
+            *SETTLE_WAIT,
             ("delay", 2.0),
             ("goto", overlay),
             ("delay", 5.0),
@@ -1085,7 +1093,12 @@ class TestMissingContactOverlay:
         with self.browser(reader, mock_page, pages, events, redirects={me: profile}):
             result = await reader.get_my_profile(sections={"contact_info"})
 
-        assert events == [("goto", me), ("delay", 2.0), ("goto", overlay)]
+        assert events == [
+            ("goto", me),
+            *SETTLE_WAIT_LOADED,
+            ("delay", 2.0),
+            ("goto", overlay),
+        ]
         assert result["url"] == profile
         assert result["sections"] == {"main_profile": PROFILE_TEXT}
         assert result["section_errors"] == {"contact_info": _missing_root(overlay)}

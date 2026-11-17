@@ -81,6 +81,97 @@
       "section": "main_profile"
     },
     {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "get_my_profile",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
       "actual_scrolls": 2,
       "call": "get_my_profile",
       "kind": "boundary.scroll_body",

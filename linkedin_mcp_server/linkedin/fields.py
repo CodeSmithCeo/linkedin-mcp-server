@@ -39,6 +39,8 @@ class _SectionSpec:
 
 
 _PERSON_SECTION_MODES = {
+    # The main page loads its cards (About, Activity, ...) after first paint.
+    "main_profile": CaptureMode.SETTLE,
     "experience": CaptureMode.DETAILS,
     "education": CaptureMode.DETAILS,
     "interests": CaptureMode.DETAILS,

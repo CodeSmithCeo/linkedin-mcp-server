@@ -29,6 +29,24 @@
     {
       "call": "read_person",
       "callback_id": "callback-1",
+      "event": "request",
+      "kind": "listener.add"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-2",
+      "event": "requestfinished",
+      "kind": "listener.add"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-3",
+      "event": "requestfailed",
+      "kind": "listener.add"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-4",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -71,7 +89,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-1",
+      "callback_id": "callback-4",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -93,6 +111,120 @@
       "kind": "boundary.modal"
     },
     {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
+      "call": "read_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5
+    },
+    {
+      "call": "read_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403"
+    },
+    {
       "actual_scrolls": 2,
       "call": "read_person",
       "kind": "boundary.scroll_body",
@@ -109,6 +241,24 @@
       "kind": "evaluate",
       "operation": "root_content",
       "program_digest": "e6b2be4ebddd"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-5",
+      "event": "request",
+      "kind": "listener.remove"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-6",
+      "event": "requestfinished",
+      "kind": "listener.remove"
+    },
+    {
+      "call": "read_person",
+      "callback_id": "callback-7",
+      "event": "requestfailed",
+      "kind": "listener.remove"
     },
     {
       "arg": null,
@@ -138,7 +288,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-2",
+      "callback_id": "callback-8",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -181,7 +331,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-2",
+      "callback_id": "callback-8",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -261,7 +411,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-3",
+      "callback_id": "callback-9",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -304,7 +454,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-3",
+      "callback_id": "callback-9",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -384,7 +534,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-4",
+      "callback_id": "callback-10",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -427,7 +577,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-4",
+      "callback_id": "callback-10",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -507,7 +657,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-5",
+      "callback_id": "callback-11",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -550,7 +700,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-5",
+      "callback_id": "callback-11",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -630,7 +780,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-6",
+      "callback_id": "callback-12",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -673,7 +823,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-6",
+      "callback_id": "callback-12",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -753,7 +903,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-7",
+      "callback_id": "callback-13",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -796,7 +946,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-7",
+      "callback_id": "callback-13",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -876,7 +1026,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-8",
+      "callback_id": "callback-14",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -919,7 +1069,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-8",
+      "callback_id": "callback-14",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -999,7 +1149,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-9",
+      "callback_id": "callback-15",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -1042,7 +1192,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-9",
+      "callback_id": "callback-15",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -1188,7 +1338,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-10",
+      "callback_id": "callback-16",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -1231,7 +1381,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-10",
+      "callback_id": "callback-16",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -1311,7 +1461,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-11",
+      "callback_id": "callback-17",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -1354,7 +1504,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-11",
+      "callback_id": "callback-17",
       "event": "framenavigated",
       "kind": "listener.remove"
     },
@@ -1396,7 +1546,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-12",
+      "callback_id": "callback-18",
       "event": "framenavigated",
       "kind": "listener.add"
     },
@@ -1439,7 +1589,7 @@
     },
     {
       "call": "read_person",
-      "callback_id": "callback-12",
+      "callback_id": "callback-18",
       "event": "framenavigated",
       "kind": "listener.remove"
     },

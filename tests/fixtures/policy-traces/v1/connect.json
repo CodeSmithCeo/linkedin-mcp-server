@@ -9,6 +9,27 @@
     {
       "call": "connect_with_person",
       "callback_id": "callback-1",
+      "event": "request",
+      "kind": "listener.add",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-2",
+      "event": "requestfinished",
+      "kind": "listener.add",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-3",
+      "event": "requestfailed",
+      "kind": "listener.add",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-4",
       "event": "framenavigated",
       "kind": "listener.add",
       "section": "main_profile"
@@ -57,7 +78,7 @@
     },
     {
       "call": "connect_with_person",
-      "callback_id": "callback-1",
+      "callback_id": "callback-4",
       "event": "framenavigated",
       "kind": "listener.remove",
       "section": "main_profile"
@@ -83,6 +104,139 @@
       "section": "main_profile"
     },
     {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "sleep",
+      "reason": "sleep",
+      "seconds": 0.5,
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "kind": "evaluate",
+      "operation": "settle_text_length",
+      "program_digest": "65fd36c24403",
+      "section": "main_profile"
+    },
+    {
       "actual_scrolls": 2,
       "call": "connect_with_person",
       "kind": "boundary.scroll_body",
@@ -100,6 +254,27 @@
       "kind": "evaluate",
       "operation": "root_content",
       "program_digest": "e6b2be4ebddd",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-5",
+      "event": "request",
+      "kind": "listener.remove",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-6",
+      "event": "requestfinished",
+      "kind": "listener.remove",
+      "section": "main_profile"
+    },
+    {
+      "call": "connect_with_person",
+      "callback_id": "callback-7",
+      "event": "requestfailed",
+      "kind": "listener.remove",
       "section": "main_profile"
     },
     {
